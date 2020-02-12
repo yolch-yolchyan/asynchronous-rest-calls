@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTest {
@@ -23,7 +24,10 @@ public class UserControllerTest {
         .when()
                 .get(baseUrl, existingUserId)
         .then()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value())
+                .body("user", notNullValue())
+                .body("user.id", notNullValue())
+                .body("posts", hasSize(greaterThan(0)));
     }
 
     @Test
